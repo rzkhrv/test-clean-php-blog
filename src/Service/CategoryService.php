@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-class CategoryService
-{
+use App\Repository\CategoryRepository;
 
+readonly class CategoryService
+{
+    public function __construct(
+        private CategoryRepository $repository,
+    ) {}
 }
