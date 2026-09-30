@@ -27,6 +27,8 @@ final class Application
 
     private PDO $pdo;
 
+    private Seeder $seeder;
+
     private CategoryRepository $categoryRepository;
     private PostRepository $postRepository;
 
@@ -85,6 +87,7 @@ final class Application
         $this->initView($basePath);
         $this->injectDependencies();
         $this->initRouter();
+        $this->initSeeder();
 
         $this->initialized = true;
     }
@@ -129,7 +132,7 @@ final class Application
     {
         $this->categoryController = new CategoryController($this->categoryService, $this->smarty);
         $this->postController = new PostController($this->postService, $this->smarty);
-        $this->homeController = new HomeController($this->smarty);
+        $this->homeController = new HomeController($this->categoryService, $this->smarty);
     }
 
     private function initRouter(): void
@@ -147,6 +150,16 @@ final class Application
         $smarty->setCompileDir($basePath . '/views/templates_c/');
 
         $this->smarty = $smarty;
+    }
+
+    private function initSeeder(): void
+    {
+        $this->seeder = new Seeder($this->pdo);
+    }
+
+    public function runSeed()
+    {
+        $this->seeder->run();
     }
 
     public function run(): void

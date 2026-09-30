@@ -4,7 +4,9 @@ namespace App\Repository;
 
 use PDO;
 
-class BaseRepository
+abstract class BaseRepository
 {
     public function __construct(protected readonly PDO $pdo) {}
+
+    abstract protected function hydrate(array $row): mixed;
 }

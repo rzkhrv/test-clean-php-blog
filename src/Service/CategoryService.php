@@ -11,4 +11,9 @@ readonly class CategoryService
     public function __construct(
         private CategoryRepository $repository,
     ) {}
+
+    public function getForHomePage(): array
+    {
+        return $this->repository->findAllWithPosts();
+    }
 }

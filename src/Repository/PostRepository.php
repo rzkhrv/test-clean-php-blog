@@ -7,4 +7,8 @@ namespace App\Repository;
 class PostRepository extends BaseRepository
 {
 
+    protected function hydrate(array $row): mixed
+    {
+        // TODO: Implement hydrate() method.
+    }
 }
