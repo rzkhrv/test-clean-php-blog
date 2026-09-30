@@ -3,9 +3,14 @@
 {block name='title'}Главная{/block}
 
 {block name='body'}
-    <ul>
     {foreach $categories as $category}
-        <li>{$category->name}</li>
+        <div class="category">
+            <h2>{$category->name}</h2>
+            <p>{$category->description}</p>
+
+            <div class="category-posts"></div>
+
+            <a href="/category/{$category->id}" class="btn">Все статьи</a>
+        </div>
     {/foreach}
-    </ul>
 {/block}
