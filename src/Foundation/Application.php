@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace App\Foundation;
 
+use App\Foundation\Config\MysqlDatabaseConfig;
 use App\Http\Controller\CategoryController;
 use App\Http\Controller\HomeController;
 use App\Http\Controller\PostController;
-use App\Http\Request;
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use App\Service\CategoryService;
 use App\Service\PostService;
-use App\Support\Config\MysqlDatabaseConfig;
 use Dotenv\Dotenv;
 use InvalidArgumentException;
 use PDO;

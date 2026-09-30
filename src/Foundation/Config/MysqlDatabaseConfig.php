@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Support\Config;
+namespace App\Foundation\Config;
 
 use PDO;
 use SensitiveParameter;

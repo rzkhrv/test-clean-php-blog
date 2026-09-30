@@ -1,12 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Foundation;
 
 use App\Exceptions\NotFoundHttpException;
 use App\Http\Controller\CategoryController;
 use App\Http\Controller\HomeController;
 use App\Http\Controller\PostController;
-use App\Http\Request;
 
 readonly class Router
 {

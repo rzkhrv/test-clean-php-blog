@@ -6,4 +6,4 @@ $basePath = realpath(__DIR__ . '/..');
 
 require_once $basePath . '/vendor/autoload.php';
 
-\App\Application::getInstance($basePath)->run();
+\App\Foundation\Application::getInstance($basePath)->run();

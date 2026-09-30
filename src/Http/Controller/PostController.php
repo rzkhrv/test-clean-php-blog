@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controller;
 
-use App\Http\Request;
+use App\Foundation\Request;
 use App\Service\PostService;
 
 readonly class PostController
