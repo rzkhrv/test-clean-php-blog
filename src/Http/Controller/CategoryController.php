@@ -6,15 +6,17 @@ namespace App\Http\Controller;
 
 use App\Foundation\Request;
 use App\Service\CategoryService;
+use Smarty\Smarty;
 
-readonly class CategoryController
+class CategoryController
 {
     public function __construct(
         private CategoryService $service,
+        private Smarty $smarty,
     ) {}
 
     public function index(Request $request)
     {
-        echo 'category';
+        $this->smarty->display('pages/category.tpl');
     }
 }

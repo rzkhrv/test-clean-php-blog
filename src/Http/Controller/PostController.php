@@ -6,15 +6,17 @@ namespace App\Http\Controller;
 
 use App\Foundation\Request;
 use App\Service\PostService;
+use Smarty\Smarty;
 
-readonly class PostController
+class PostController
 {
     public function __construct(
         private PostService $postService,
+        private Smarty $smarty,
     ) {}
 
     public function index(Request $request)
     {
-        echo 'post';
+        $this->smarty->display('pages/post.tpl');
     }
 }

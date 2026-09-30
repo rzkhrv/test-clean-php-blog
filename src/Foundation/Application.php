@@ -12,9 +12,11 @@ use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use App\Service\CategoryService;
 use App\Service\PostService;
+use Couchbase\View;
 use Dotenv\Dotenv;
 use InvalidArgumentException;
 use PDO;
+use Smarty\Smarty;
 use Throwable;
 
 final class Application
@@ -36,6 +38,8 @@ final class Application
     private PostController $postController;
 
     private Router $router;
+
+    private Smarty $smarty;
 
     private function __construct(){}
     private function __clone(){}
@@ -78,6 +82,7 @@ final class Application
 
         $this->loadEnvironment($basePath);
         $this->initDatabase();
+        $this->initView($basePath);
         $this->injectDependencies();
         $this->initRouter();
 
@@ -122,9 +127,9 @@ final class Application
 
     private function initControllers(): void
     {
-        $this->categoryController = new CategoryController($this->categoryService);
-        $this->postController = new PostController($this->postService);
-        $this->homeController = new HomeController();
+        $this->categoryController = new CategoryController($this->categoryService, $this->smarty);
+        $this->postController = new PostController($this->postService, $this->smarty);
+        $this->homeController = new HomeController($this->smarty);
     }
 
     private function initRouter(): void
@@ -134,6 +139,14 @@ final class Application
             categoryController: $this->categoryController,
             postController: $this->postController,
         );
+    }
+
+    private function initView(string $basePath): void {
+        $smarty = new Smarty();
+        $smarty->setTemplateDir($basePath . '/views/templates/');
+        $smarty->setCompileDir($basePath . '/views/templates_c/');
+
+        $this->smarty = $smarty;
     }
 
     public function run(): void
