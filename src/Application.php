@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Controller\CategoryController;
-use App\Controller\HomeController;
-use App\Controller\PostController;
+use App\Http\Controller\CategoryController;
+use App\Http\Controller\HomeController;
+use App\Http\Controller\PostController;
+use App\Http\Request;
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use App\Service\CategoryService;
@@ -34,6 +35,8 @@ final class Application
     private HomeController $homeController;
     private CategoryController $categoryController;
     private PostController $postController;
+
+    private Router $router;
 
     private function __construct(){}
     private function __clone(){}
@@ -77,6 +80,7 @@ final class Application
         $this->loadEnvironment($basePath);
         $this->initDatabase();
         $this->injectDependencies();
+        $this->initRouter();
 
         $this->initialized = true;
     }
@@ -124,10 +128,19 @@ final class Application
         $this->homeController = new HomeController();
     }
 
+    private function initRouter(): void
+    {
+        $this->router = new Router(
+            homeController: $this->homeController,
+            categoryController: $this->categoryController,
+            postController: $this->postController,
+        );
+    }
+
     public function run(): void
     {
         try {
-            echo 'OK';
+            $this->router->dispatch(Request::capture());
         } catch (Throwable $e) {
             echo 'ERROR: ' . $e->getMessage();
         }
