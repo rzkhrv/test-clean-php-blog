@@ -8,7 +8,7 @@ use App\Data\CategoryData;
 
 class CategoryRepository extends BaseRepository
 {
-    public function findAllWithPosts(): array
+    public function findAllWhereHasPosts(): array
     {
         $query = $this->pdo->query("
             SELECT DISTINCT c.*

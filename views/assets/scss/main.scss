@@ -6,6 +6,7 @@ $border-color: #ddd;
 $spacing-unit: 20px;
 $border-radius: 5px;
 $font: sans-serif;
+$transition-speed: 0.3s;
 
 * {
   box-sizing: border-box;
@@ -52,5 +53,19 @@ body {
   &:hover {
     background: color.scale($primary-color, $blackness: 10%);
     text-decoration: none;
+  }
+}
+
+.post-img {
+  width: 100%;
+  height: auto;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  transition: transform $transition-speed ease;
+
+  &:hover {
+    transform: scale(1.05);
   }
 }

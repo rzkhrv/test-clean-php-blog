@@ -44,4 +44,17 @@ body {
   text-decoration: none;
 }
 
+.post-img {
+  width: 100%;
+  height: auto;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  transition: transform 0.3s ease;
+}
+.post-img:hover {
+  transform: scale(1.05);
+}
+
 /*# sourceMappingURL=main.css.map */

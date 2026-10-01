@@ -10,16 +10,22 @@ use Smarty\Smarty;
 
 class HomeController
 {
+    private const int LATEST_POST_COUNT = 3;
+
     public function __construct(
         private CategoryService $categoryService,
         private Smarty $smarty,
     ) {}
 
-    public function index(Request $request)
+    public function index(Request $request): void
     {
-        $categories = $this->categoryService->getForHomePage();
+        $categoryWithPosts = $this->categoryService->getForHomePage(self::LATEST_POST_COUNT);
 
-        $this->smarty->assign(['categories' => $categories]);
+        $this->smarty->assign([
+            'categories' => $categoryWithPosts->categories,
+            'posts' => $categoryWithPosts->posts
+        ]);
+
         $this->smarty->display('pages/index.tpl');
     }
 }
