@@ -47,7 +47,21 @@ class PostRepository extends BaseRepository
 
         return $posts;
     }
-    
+
+    public function paginate(int $categoryId, int $limit, $offset = 0): array
+    {
+        $query = $this->pdo->prepare("
+            SELECT p.* FROM posts p
+            JOIN post_categories pc ON p.id = pc.post_id
+            WHERE pc.category_id = ?
+            ORDER BY p.created_at DESC
+            LIMIT ?
+            OFFSET ?
+        ");
+        $query->execute([$categoryId, $limit, $offset]);
+
+        return array_map(fn(array $row): PostData => $this->hydrate($row), $query->fetchAll());
+    }
 
     protected function hydrate(array $row): mixed
     {

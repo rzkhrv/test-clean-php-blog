@@ -5,26 +5,50 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Data\CategoryData;
+use App\Data\CategoriesWithPostsData;
 use App\Data\CategoryWithPostsData;
+use App\Exceptions\DbNotFoundException;
+use App\Exceptions\InternalServerErrorHttpException;
+use App\Exceptions\NotFoundHttpException;
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
+use Exception;
+use Throwable;
 
 readonly class CategoryService
 {
     public function __construct(
-        private CategoryRepository $repository,
-        private PostRepository $postRepository,
+        private CategoryRepository $categoryRepository,
+        private PostRepository     $postRepository,
     ) {}
 
-    public function getForHomePage(int $postLimit): CategoryWithPostsData
+    public function getForHomePage(int $postLimit): CategoriesWithPostsData
     {
-        $categories = $this->repository->findAllWhereHasPosts();
+        $categories = $this->categoryRepository->findAllWhereHasPosts();
         $categoryIds = array_map(fn(CategoryData $c): int => $c->id, $categories);
 
         $posts = $this->postRepository->findLatestByCategoryIds($categoryIds, $postLimit);
 
-        return new CategoryWithPostsData(
+        return new CategoriesWithPostsData(
             categories: $categories,
+            posts: $posts
+        );
+    }
+
+    public function getCategoryWithPosts(int $categoryId): CategoryWithPostsData
+    {
+        try {
+            $category = $this->categoryRepository->get($categoryId);
+        } catch (DbNotFoundException $e) {
+            throw new NotFoundHttpException('Category not found');
+        } catch (Throwable $e) {
+            throw new InternalServerErrorHttpException(previous: $e);
+        }
+
+        $posts = $this->postRepository->paginate($category->id, 10, 0);
+
+        return new CategoryWithPostsData(
+            category: $category,
             posts: $posts
         );
     }

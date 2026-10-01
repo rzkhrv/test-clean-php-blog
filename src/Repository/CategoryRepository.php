@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Data\CategoryData;
+use App\Exceptions\DbNotFoundException;
 
 class CategoryRepository extends BaseRepository
 {
@@ -21,6 +22,19 @@ class CategoryRepository extends BaseRepository
             fn (array $row): CategoryData => $this->hydrate($row),
             $query->fetchAll()
         );
+    }
+
+    public function get(int $id): CategoryData
+    {
+        $query = $this->pdo->prepare("SELECT * FROM categories WHERE id = ?");
+        $query->execute([$id]);
+        $row = $query->fetch();
+
+        if ($row === false){
+            throw new DbNotFoundException();
+        }
+
+        return $this->hydrate($row);
     }
 
     /**

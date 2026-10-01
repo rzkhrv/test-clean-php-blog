@@ -28,4 +28,9 @@ readonly class Request
         $uri = trim($this->uri, '/');
         return $uri !== '' ? explode('/', $uri) : [];
     }
+
+    public function getUriSegment(int $index, ?string $default = null): ?string {
+        $segments = $this->getUriSegments();
+        return $segments[$index] ?? $default;
+    }
 }

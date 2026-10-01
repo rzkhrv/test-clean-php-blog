@@ -2,14 +2,14 @@
 
 namespace App\Data;
 
-class CategoryWithPostsData
+class CategoriesWithPostsData
 {
     /**
-     * @param CategoryData $category
+     * @param CategoryData[] $categories
      * @param PostData[] $posts
      */
     public function __construct(
-        public CategoryData $category,
+        public array $categories,
         public array $posts,
     ) {}
 }
