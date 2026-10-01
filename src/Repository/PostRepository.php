@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Data\PostData;
+use App\Exceptions\DbNotFoundException;
 use DateTimeImmutable;
 
 class PostRepository extends BaseRepository
@@ -61,6 +62,19 @@ class PostRepository extends BaseRepository
         $query->execute([$categoryId, $limit, $offset]);
 
         return array_map(fn(array $row): PostData => $this->hydrate($row), $query->fetchAll());
+    }
+
+    public function get(int $id): PostData
+    {
+        $query = $this->pdo->prepare("SELECT * FROM posts WHERE id = ?");
+        $query->execute([$id]);
+        $row = $query->fetch();
+
+        if ($row === false){
+            throw new DbNotFoundException();
+        }
+
+        return $this->hydrate($row);
     }
 
     protected function hydrate(array $row): mixed

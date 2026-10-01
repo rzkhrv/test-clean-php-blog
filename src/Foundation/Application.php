@@ -125,7 +125,7 @@ final class Application
     private function initServices(): void
     {
         $this->categoryService = new CategoryService($this->categoryRepository, $this->postRepository);
-        $this->postService = new PostService($this->postRepository);
+        $this->postService = new PostService($this->postRepository, $this->categoryRepository);
     }
 
     private function initControllers(): void

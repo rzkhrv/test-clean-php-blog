@@ -17,6 +17,14 @@ class PostController
 
     public function index(Request $request)
     {
+        $postWithCategories = $this->postService->getPostWithCategories(
+            (int)$request->getUriSegment(1)
+        );
+
+        $this->smarty->assign([
+            'post' => $postWithCategories->post,
+            'categories' => $postWithCategories->categories,
+        ]);
         $this->smarty->display('pages/post.tpl');
     }
 }

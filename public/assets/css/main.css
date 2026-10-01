@@ -57,4 +57,27 @@ body {
   transform: scale(1.05);
 }
 
+.post-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.post-category {
+  display: inline-block;
+  padding: 0 10px;
+  background: rgb(77.4117647059%, 32.5882352941%, 55.1764705882%);
+  color: #fff;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid #bf4080;
+}
+.post-category:hover {
+  background: #bf4080;
+  color: #fff;
+}
+
 /*# sourceMappingURL=main.css.map */

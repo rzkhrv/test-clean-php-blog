@@ -38,6 +38,27 @@ class CategoryRepository extends BaseRepository
     }
 
     /**
+     * @param int $postId
+     * @return CategoryData[]
+     */
+    public function findAllByPostId(int $postId): array
+    {
+        $query = $this->pdo->prepare("
+            SELECT DISTINCT c.*
+            FROM categories c
+            INNER JOIN post_categories pc ON c.id = pc.category_id
+            WHERE pc.post_id = ?
+            ORDER BY c.id
+        ");
+        $query->execute([$postId]);
+
+        return array_map(
+            fn (array $row): CategoryData => $this->hydrate($row),
+            $query->fetchAll()
+        );
+    }
+
+    /**
      * @param array $row
      * @return CategoryData
      */
