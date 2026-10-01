@@ -34,3 +34,21 @@ CREATE TABLE IF NOT EXISTS post_views (
     INDEX idx_post_id (post_id)
 );
 
+CREATE TABLE post_views_total (
+    post_id INT PRIMARY KEY,
+    value INT DEFAULT 0,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+);
+
+DELIMITER //
+
+CREATE TRIGGER trigger_update_views_total
+    AFTER INSERT ON post_views
+    FOR EACH ROW
+BEGIN
+    INSERT INTO post_views_total (post_id, value)
+    VALUES (NEW.post_id, 1)
+        ON DUPLICATE KEY UPDATE value = value + 1;
+END//
+
+DELIMITER ;

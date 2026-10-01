@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controller;
 
 use App\Foundation\Request;
+use App\Http\Request\FilterCategoryRequest;
 use App\Service\CategoryService;
 use Smarty\Smarty;
 
@@ -18,7 +19,7 @@ class CategoryController
     public function index(Request $request)
     {
         $categoryWithPosts = $this->service->getCategoryWithPosts(
-            (int)$request->getUriSegment(1)
+            FilterCategoryRequest::createFromRequest($request)
         );
 
         $this->smarty->assign([

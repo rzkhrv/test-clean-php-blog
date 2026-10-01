@@ -16,6 +16,7 @@
                         </a>
                         <h3>{$post->name}</h3>
                         <p>{$post->description}</p>
+                        <div class="post-views">Просмотров: {$post->viewsCount}</div>
                     </div>
                 {/foreach}
             </div>

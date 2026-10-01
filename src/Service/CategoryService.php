@@ -7,9 +7,11 @@ namespace App\Service;
 use App\Data\CategoryData;
 use App\Data\CategoriesWithPostsData;
 use App\Data\CategoryWithPostsData;
+use App\Data\Filter\PostFilter;
 use App\Exceptions\DbNotFoundException;
 use App\Exceptions\InternalServerErrorHttpException;
 use App\Exceptions\NotFoundHttpException;
+use App\Http\Request\FilterCategoryRequest;
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use Exception;
@@ -35,17 +37,25 @@ readonly class CategoryService
         );
     }
 
-    public function getCategoryWithPosts(int $categoryId): CategoryWithPostsData
+    public function getCategoryWithPosts(FilterCategoryRequest $request): CategoryWithPostsData
     {
         try {
-            $category = $this->categoryRepository->get($categoryId);
+            $category = $this->categoryRepository->get($request->id);
         } catch (DbNotFoundException $e) {
             throw new NotFoundHttpException('Category not found');
         } catch (Throwable $e) {
             throw new InternalServerErrorHttpException(previous: $e);
         }
 
-        $posts = $this->postRepository->paginate($category->id, 10, 0);
+        $posts = $this->postRepository->paginate(
+            new PostFilter(
+                categoryId: $category->id,
+                sortBy: $request->sortBy,
+                sortDirection: $request->sortDirection,
+                limit: $request->limit,
+                offset: $request->offset
+            )
+        );
 
         return new CategoryWithPostsData(
             category: $category,

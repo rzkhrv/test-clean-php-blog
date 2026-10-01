@@ -12,6 +12,7 @@ readonly class PostData
         public string            $description,
         public string            $text,
         public string            $imagePath,
+        public int               $viewsCount,
         public DateTimeImmutable $createdAt,
     ) {}
 }

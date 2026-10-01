@@ -24,6 +24,10 @@ readonly class Request
         );
     }
 
+    public function getQuery(string $key, mixed $default = null): mixed {
+        return $this->query[$key] ?? $default;
+    }
+
     public function getUriSegments(): array {
         $uri = trim($this->uri, '/');
         return $uri !== '' ? explode('/', $uri) : [];

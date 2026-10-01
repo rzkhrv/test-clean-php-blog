@@ -12,5 +12,6 @@
         </div>
         <h3>{$post->name}</h3>
         <p>{$post->text}</p>
+        <div class="post-views">Просмотров: {$post->viewsCount}</div>
     </div>
 {/block}
