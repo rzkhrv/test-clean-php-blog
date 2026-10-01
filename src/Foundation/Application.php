@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Foundation;
 
 use App\Foundation\Config\MysqlDatabaseConfig;
+use App\Foundation\Data\VisitorData;
 use App\Http\Controller\CategoryController;
 use App\Http\Controller\HomeController;
 use App\Http\Controller\PostController;
@@ -12,7 +13,6 @@ use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use App\Service\CategoryService;
 use App\Service\PostService;
-use Couchbase\View;
 use Dotenv\Dotenv;
 use InvalidArgumentException;
 use PDO;
@@ -42,6 +42,8 @@ final class Application
     private Router $router;
 
     private Smarty $smarty;
+
+    private VisitorData $visitor;
 
     private function __construct(){}
     private function __clone(){}
@@ -85,6 +87,7 @@ final class Application
         $this->loadEnvironment($basePath);
         $this->initDatabase();
         $this->initView($basePath);
+        $this->initVisitor();
         $this->injectDependencies();
         $this->initRouter();
         $this->initSeeder();
@@ -131,7 +134,7 @@ final class Application
     private function initControllers(): void
     {
         $this->categoryController = new CategoryController($this->categoryService, $this->smarty);
-        $this->postController = new PostController($this->postService, $this->smarty);
+        $this->postController = new PostController($this->postService, $this->smarty, $this->visitor);
         $this->homeController = new HomeController($this->categoryService, $this->smarty);
     }
 
@@ -155,6 +158,11 @@ final class Application
     private function initSeeder(): void
     {
         $this->seeder = new Seeder($this->pdo);
+    }
+
+    private function initVisitor(): void
+    {
+        $this->visitor = Visitor::create($_COOKIE);
     }
 
     public function runSeed()

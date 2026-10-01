@@ -88,6 +88,16 @@ class PostRepository extends BaseRepository
         return $this->hydrate($row);
     }
 
+    public function addView(int $postId, string $visitorId): void
+    {
+        $query = $this->pdo->prepare("
+            INSERT IGNORE INTO post_views (post_id, hash) 
+            VALUES (?, ?)
+        ");
+
+        $query->execute([$postId, $visitorId]);
+    }
+
     private function createOrderQuery(PostFilter $filter): string
     {
         $sortDirection = strtoupper($filter->sortDirection->value);

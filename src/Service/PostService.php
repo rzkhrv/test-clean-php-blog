@@ -8,6 +8,7 @@ use App\Data\PostWithCategoriesData;
 use App\Exceptions\DbNotFoundException;
 use App\Exceptions\InternalServerErrorHttpException;
 use App\Exceptions\NotFoundHttpException;
+use App\Foundation\Data\VisitorData;
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use Throwable;
@@ -19,7 +20,7 @@ readonly class PostService
         private CategoryRepository $categoryRepository,
     ) {}
 
-    public function getPostWithCategories(int $postId): PostWithCategoriesData
+    public function getPostWithCategories(int $postId, VisitorData $visitor): PostWithCategoriesData
     {
         try {
             $post = $this->postRepository->get($postId);
@@ -28,6 +29,8 @@ readonly class PostService
         } catch (Throwable $e) {
             throw new InternalServerErrorHttpException(previous: $e);
         }
+
+        $this->postRepository->addView($post->id, $visitor->id);
 
         $categories = $this->categoryRepository->findAllByPostId($postId);
 
