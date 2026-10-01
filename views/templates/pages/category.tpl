@@ -7,6 +7,18 @@
         <h2>{$category->name}</h2>
         <p>{$category->description}</p>
 
+        <div>
+            <span>Сортировка:</span>
+            <div>
+                <a href="/category/{$category->id}?sortBy=date&sortDirection={$sortDirection === 'desc' ? 'asc' : 'desc'}">
+                    По дате
+                </a>
+                <a href="/category/{$category->id}?sortBy=views&sortDirection={$sortDirection === 'desc' ? 'asc' : 'desc'}">
+                    По просмотрам
+                </a>
+            </div>
+        </div>
+
         <div class="category-posts">
             {foreach $posts as $post}
                 <div>
@@ -19,5 +31,21 @@
                 </div>
             {/foreach}
         </div>
+
+        <nav>
+            {if $currentPage > 1}
+                <a href="/category/{$category->id}?sortBy={$sortBy}&sortDirection={$sortDirection}&page={$currentPage - 1}"
+                    >Назад</a>
+            {/if}
+
+            <span>
+                Страница {$currentPage} из {$totalPages}
+            </span>
+
+            {if $currentPage < $totalPages}
+                <a href="/category/{$category->id}?sortBy={$sortBy}&sortDirection={$sortDirection}&page={$currentPage + 1}"
+                   >Вперёд</a>
+            {/if}
+        </nav>
     </div>
 {/block}

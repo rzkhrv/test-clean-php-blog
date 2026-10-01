@@ -98,13 +98,26 @@ class PostRepository extends BaseRepository
         $query->execute([$postId, $visitorId]);
     }
 
+    public function countByCategoryId(int $categoryId): int
+    {
+        $query = $this->pdo->prepare("
+            SELECT COUNT(*)
+            FROM post_categories
+            WHERE category_id = ?
+        ");
+
+        $query->execute([$categoryId]);
+
+        return (int)$query->fetchColumn();
+    }
+
     private function createOrderQuery(PostFilter $filter): string
     {
         $sortDirection = strtoupper($filter->sortDirection->value);
 
         return match($filter->sortBy) {
-            PostSortByEnum::Views => "pvt.views_count $sortDirection",
-            PostSortByEnum::Date => "p.created_at $sortDirection",
+            PostSortByEnum::Views => "views_count $sortDirection, p.id $sortDirection",
+            PostSortByEnum::Date => "p.created_at $sortDirection, p.id $sortDirection",
         };
     }
 

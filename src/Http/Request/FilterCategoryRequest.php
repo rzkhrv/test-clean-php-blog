@@ -8,6 +8,8 @@ use App\Foundation\Request;
 
 class FilterCategoryRequest
 {
+    private const int POST_LIMIT = 1;
+
     public function __construct(
         public int               $id,
 
@@ -15,7 +17,7 @@ class FilterCategoryRequest
         public SortDirectionEnum $sortDirection,
 
         public int               $limit,
-        public int               $offset,
+        public int               $page,
     ) {}
 
     public static function createFromRequest(Request $request): self
@@ -27,8 +29,8 @@ class FilterCategoryRequest
             id: (int)$request->getUriSegment(1),
             sortBy: PostSortByEnum::tryFrom($sortBy) ?? PostSortByEnum::Date,
             sortDirection: SortDirectionEnum::tryFrom($sortDirection) ?? SortDirectionEnum::Desc,
-            limit: (int)$request->getQuery('limit', 10),
-            offset: (int)$request->getQuery('offset', 0),
+            limit: self::POST_LIMIT,
+            page: (int)$request->getQuery('page', 1),
         );
     }
 }

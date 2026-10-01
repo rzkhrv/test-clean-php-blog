@@ -53,13 +53,18 @@ readonly class CategoryService
                 sortBy: $request->sortBy,
                 sortDirection: $request->sortDirection,
                 limit: $request->limit,
-                offset: $request->offset
+                offset: ($request->page - 1) * $request->limit
             )
         );
 
+        $postsCount = $this->postRepository->countByCategoryId($category->id);
+        $totalPages = (int)ceil($postsCount / $request->limit);
+
         return new CategoryWithPostsData(
             category: $category,
-            posts: $posts
+            posts: $posts,
+            totalPosts: $postsCount,
+            totalPages: $totalPages,
         );
     }
 }
