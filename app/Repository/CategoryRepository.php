@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Data\CategoryData;
+use App\Data\Category\CategoryData;
 use App\Exceptions\DbNotFoundException;
 
 class CategoryRepository extends BaseRepository

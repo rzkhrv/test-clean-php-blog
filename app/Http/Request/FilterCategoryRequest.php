@@ -8,7 +8,7 @@ use App\Foundation\Request;
 
 class FilterCategoryRequest
 {
-    private const int POST_LIMIT = 1;
+    private const int POST_LIMIT = 6;
 
     public function __construct(
         public int               $id,

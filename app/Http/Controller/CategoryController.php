@@ -16,7 +16,7 @@ class CategoryController
         private Smarty $smarty,
     ) {}
 
-    public function index(Request $request)
+    public function index(Request $request): void
     {
         $request = FilterCategoryRequest::createFromRequest($request);
         $categoryWithPosts = $this->service->getCategoryWithPosts($request);

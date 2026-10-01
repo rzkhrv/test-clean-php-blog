@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Data\Filter\PostFilter;
-use App\Data\PostData;
+use App\Data\Post\PostData;
 use App\Enums\PostSortByEnum;
 use App\Exceptions\DbNotFoundException;
 use DateTimeImmutable;

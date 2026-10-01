@@ -2,9 +2,7 @@
 
 namespace App\Exceptions;
 
-use Exception;
-
-class InternalServerErrorHttpException extends Exception
+class InternalServerErrorHttpException extends HttpException
 {
     protected $message = 'Internal Server Error';
 }

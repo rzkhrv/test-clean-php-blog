@@ -17,7 +17,7 @@ class PostController
         private VisitorData $visitor,
     ) {}
 
-    public function index(Request $request)
+    public function index(Request $request): void
     {
         $postPag = $this->postService->getPostPageData(
             postId: (int)$request->getUriSegment(1),

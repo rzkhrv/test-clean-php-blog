@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Data;
+namespace App\Data\Post;
+
+use App\Data\Category\CategoryData;
 
 class PostPageData
 {

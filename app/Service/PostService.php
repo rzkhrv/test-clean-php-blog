@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Data\PostPageData;
+use App\Data\Post\PostPageData;
 use App\Exceptions\DbNotFoundException;
 use App\Exceptions\InternalServerErrorHttpException;
 use App\Exceptions\NotFoundHttpException;
@@ -24,7 +24,7 @@ readonly class PostService
     {
         try {
             $post = $this->postRepository->get($postId);
-        } catch (DbNotFoundException $e) {
+        } catch (DbNotFoundException) {
             throw new NotFoundHttpException('Post not found');
         } catch (Throwable $e) {
             throw new InternalServerErrorHttpException(previous: $e);

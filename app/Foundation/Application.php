@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Foundation;
 
+use App\Exceptions\HttpException;
 use App\Foundation\Config\MysqlDatabaseConfig;
 use App\Foundation\Data\VisitorData;
 use App\Http\Controller\CategoryController;
@@ -149,8 +150,8 @@ final class Application
 
     private function initView(string $basePath): void {
         $smarty = new Smarty();
-        $smarty->setTemplateDir($basePath . '/views/templates/');
-        $smarty->setCompileDir($basePath . '/views/templates_c/');
+        $smarty->setTemplateDir($basePath . '/resources/templates/');
+        $smarty->setCompileDir($basePath . '/resources/templates_c/');
 
         $this->smarty = $smarty;
     }
@@ -165,7 +166,7 @@ final class Application
         $this->visitor = Visitor::create($_COOKIE);
     }
 
-    public function runSeed()
+    public function runSeed(): void
     {
         $this->seeder->run();
     }
@@ -175,7 +176,23 @@ final class Application
         try {
             $this->router->dispatch(Request::capture());
         } catch (Throwable $e) {
-            echo 'ERROR: ' . $e->getMessage();
+            $this->handleException($e);
         }
+    }
+
+    private function handleException(Throwable $e): void
+    {
+        $code = 500;
+        $message = 'Internal Server Error';
+
+        if ($e instanceof HttpException) {
+            $code = $e->getHttpStatusCode();
+            $message = $e->getMessage();
+        }
+
+        http_response_code($code);
+
+        $this->smarty->assign(['message' => $message]);
+        $this->smarty->display('pages/404.tpl');
     }
 }

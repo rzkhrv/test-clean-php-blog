@@ -41,11 +41,18 @@ class Seeder
 
     private function getDemoCategories(): array
     {
-        return [
-            [1, 'Технологии', 'Новости из мира IT и технологий'],
-            [2, 'Путешествия', 'Истории и гайды по путешествиям'],
-            [3, 'Спорт', 'Последние спортивные новости'],
+        $names = [
+            'Технологии', 'Путешествия', 'Спорт',
+            'Наука', 'Искусство', 'Музыка',
+            'Кино', 'Еда', 'Авто',
+            'Бизнес'
         ];
+
+        $categories = [];
+        foreach ($names as $i => $name) {
+            $categories[] = [$i + 1, $name, "Описание категории: $name"];
+        }
+        return $categories;
     }
 
     private function seedPosts(): void
@@ -99,40 +106,26 @@ class Seeder
 
     private function getDemoPosts(): array
     {
-        return [
-            [
-                'id' => 1,
-                'image_path' => 'img1.jpg',
-                'name' => 'PHP 8.1 Features',
-                'description' => 'Обзор новых фишек',
-                'text' => 'Текст про PHP...',
-                'category_ids' => [1],
-            ],
-            [
-                'id' => 2,
-                'image_path' => 'img2.jpg',
-                'name' => 'Топ-5 мест в горах',
-                'description' => 'Куда поехать',
-                'text' => 'Текст про горы...',
-                'category_ids' => [2],
-            ],
-            [
-                'id' => 3,
-                'image_path' => 'img3.jpg',
-                'name' => 'Docker для начинающих',
-                'description' => 'Введение в контейнеры',
-                'text' => 'Текст про Docker...',
-                'category_ids' => [1, 2],
-            ],
-            [
-                'id' => 4,
-                'image_path' => 'img4.jpg',
-                'name' => 'Symfony vs Laravel',
-                'description' => 'Сравнение фреймворков',
-                'text' => 'Текст про фреймворки...',
-                'category_ids' => [1],
-            ],
-        ];
+        $posts = [];
+        $maxCatId = count($this->getDemoCategories());
+        $demoImages = ['img1.jpg', 'img2.jpg', 'img3.jpg', 'img4.jpg'];
+
+        for ($i = 1; $i <= 50; $i++) {
+            $randomImage = $demoImages[array_rand($demoImages)];
+            $randomCategories = array_values(
+                array_unique([rand(1, $maxCatId), rand(1, $maxCatId)])
+            );
+
+            $posts[] = [
+                'id' => $i,
+                'image_path' => $randomImage,
+                'name' => "Статья #{$i}",
+                'description' => "Краткое описание статьи #{$i}",
+                'text' => "Полный текст статьи #{$i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                'category_ids' => $randomCategories,
+            ];
+        }
+        return $posts;
     }
 
     private function seedTags(): void
@@ -150,35 +143,18 @@ class Seeder
 
     private function getDemoTags(): array
     {
-        return [
-            [
-                'id' => 1,
-                'value' => 'Котик 1',
-            ],
-            [
-                'id' => 2,
-                'value' => 'Котик 2',
-            ],
-            [
-                'id' => 3,
-                'value' => 'Котик 3',
-            ],
-            [
-                'id' => 4,
-                'value' => 'Котик 4',
-            ],
-            [
-                'id' => 5,
-                'value' => 'Котик 5',
-            ],
-            [
-                'id' => 6,
-                'value' => 'Котик 6',
-            ],
-            [
-                'id' => 7,
-                'value' => 'Котик 7',
-            ]
+        $values = [
+            'PHP', 'JS', 'Python', 'Дизайн',
+            'UI', 'UX', 'Backend', 'Frontend',
+            'DevOps', 'Cloud', 'AI', 'ML', 'Web',
+            'Mobile', 'GameDev', 'SEO', 'SMM',
+            'Маркетинг', 'Финансы', 'Крипта'
         ];
+
+        $tags = [];
+        foreach ($values as $i => $value) {
+            $tags[] = ['id' => $i + 1, 'value' => $value];
+        }
+        return $tags;
     }
 }
