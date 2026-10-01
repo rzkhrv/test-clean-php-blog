@@ -15,6 +15,7 @@ class Seeder
         $this->clearOldData();
 
         $this->seedCategories();
+        $this->seedTags();
         $this->seedPosts();
     }
 
@@ -22,9 +23,10 @@ class Seeder
     {
         $this->db->exec("DELETE FROM posts");
         $this->db->exec("DELETE FROM categories");
+        $this->db->exec("DELETE FROM tags");
     }
 
-    private function seedCategories()
+    private function seedCategories(): void
     {
         $prepared = $this->db->prepare("
             INSERT INTO categories (id, name, description) VALUES (?, ?, ?)
@@ -58,6 +60,13 @@ class Seeder
             VALUES (?, ?)
         ");
 
+        $preparedTags = $this->db->prepare("
+            INSERT INTO post_tags (post_id, tag_id) 
+            VALUES (?, ?)
+        ");
+
+        $demoTags = $this->getDemoTags();
+
         $posts = $this->getDemoPosts();
         foreach ($posts as $post) {
             $preparedPost->execute([
@@ -72,6 +81,17 @@ class Seeder
                 $preparedRelation->execute([
                     $post['id'],
                     $category_id,
+                ]);
+            }
+
+            $currentTags = $demoTags;
+            shuffle($currentTags);
+            $currentTags = array_slice($currentTags, 0, rand(1, 4));
+
+            foreach ($currentTags as $tag) {
+                $preparedTags->execute([
+                    $post['id'],
+                    $tag['id'],
                 ]);
             }
         }
@@ -112,6 +132,53 @@ class Seeder
                 'text' => 'Текст про фреймворки...',
                 'category_ids' => [1],
             ],
+        ];
+    }
+
+    private function seedTags(): void
+    {
+        $prepared = $this->db->prepare("
+            INSERT INTO tags (id, value) VALUES (?, ?)
+        ");
+
+        $tags = $this->getDemoTags();
+
+        foreach ($tags as $t) {
+            $prepared->execute([$t['id'], $t['value']]);
+        }
+    }
+
+    private function getDemoTags(): array
+    {
+        return [
+            [
+                'id' => 1,
+                'value' => 'Котик 1',
+            ],
+            [
+                'id' => 2,
+                'value' => 'Котик 2',
+            ],
+            [
+                'id' => 3,
+                'value' => 'Котик 3',
+            ],
+            [
+                'id' => 4,
+                'value' => 'Котик 4',
+            ],
+            [
+                'id' => 5,
+                'value' => 'Котик 5',
+            ],
+            [
+                'id' => 6,
+                'value' => 'Котик 6',
+            ],
+            [
+                'id' => 7,
+                'value' => 'Котик 7',
+            ]
         ];
     }
 }

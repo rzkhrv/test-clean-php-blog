@@ -111,6 +111,28 @@ class PostRepository extends BaseRepository
         return (int)$query->fetchColumn();
     }
 
+    /**
+     * @return PostData[]
+     */
+    public function getRelated(int $postId, int $limit = 3): array
+    {
+        $query = $this->pdo->prepare("
+            SELECT p.*, COUNT(*) AS rtc, COALESCE(pvt.value, 0) AS views_count
+            FROM post_tags pt1
+            JOIN post_tags pt2 ON pt2.tag_id = pt1.tag_id
+            JOIN posts p ON p.id = pt2.post_id
+            LEFT JOIN post_views_total pvt ON p.id = pvt.post_id
+            WHERE pt1.post_id = ? AND pt2.post_id <> ?
+            GROUP BY p.id
+            ORDER BY rtc DESC, p.id DESC
+            LIMIT ?
+        ");
+
+        $query->execute([$postId, $postId, $limit]);
+
+        return array_map(fn(array $row): PostData => $this->hydrate($row), $query->fetchAll());
+    }
+
     private function createOrderQuery(PostFilter $filter): string
     {
         $sortDirection = strtoupper($filter->sortDirection->value);

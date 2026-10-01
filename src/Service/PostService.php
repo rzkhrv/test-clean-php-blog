@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Data\PostWithCategoriesData;
+use App\Data\PostPageData;
 use App\Exceptions\DbNotFoundException;
 use App\Exceptions\InternalServerErrorHttpException;
 use App\Exceptions\NotFoundHttpException;
@@ -20,7 +20,7 @@ readonly class PostService
         private CategoryRepository $categoryRepository,
     ) {}
 
-    public function getPostWithCategories(int $postId, VisitorData $visitor): PostWithCategoriesData
+    public function getPostPageData(int $postId, VisitorData $visitor): PostPageData
     {
         try {
             $post = $this->postRepository->get($postId);
@@ -33,10 +33,12 @@ readonly class PostService
         $this->postRepository->addView($post->id, $visitor->id);
 
         $categories = $this->categoryRepository->findAllByPostId($postId);
+        $related = $this->postRepository->getRelated($postId);
 
-        return new PostWithCategoriesData(
+        return new PostPageData(
             post: $post,
             categories: $categories,
+            related: $related,
         );
     }
 }

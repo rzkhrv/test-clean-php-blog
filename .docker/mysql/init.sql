@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS post_views (
     INDEX idx_post_id (post_id)
 );
 
-CREATE TABLE post_views_total (
+CREATE TABLE IF NOT EXISTS post_views_total (
     post_id INT PRIMARY KEY,
     value INT DEFAULT 0,
     FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
@@ -52,3 +52,16 @@ BEGIN
 END//
 
 DELIMITER ;
+
+CREATE TABLE IF NOT EXISTS tags (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    value VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS post_tags (
+    post_id INT,
+    tag_id INT,
+    PRIMARY KEY (post_id, tag_id),
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+);
